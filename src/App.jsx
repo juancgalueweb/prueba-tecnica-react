@@ -1,31 +1,34 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import { getRandomFact } from './services/catFacts.js'
+import { getRandomCatImage } from './services/catImage.js'
 
 export const App = () => {
-  const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact'
   const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
-
   const [catFact, setCatFact] = useState()
   const [imageUrl, setImageUrl] = useState()
 
+  // Para recuperar la cita al cargar la página
   useEffect(() => {
-    fetch(CAT_ENDPOINT_RANDOM_FACT)
-      .then(res => res.json())
-      .then(data => {
-        setCatFact(data.fact)
-
-        const firstThreeWords = data.fact.split(' ', 3).join(' ')
-        fetch(`https://cataas.com/cat/says/${firstThreeWords}?json=true`)
-          .then(res => res.json())
-          .then(data => {
-            setImageUrl(data.url)
-          })
-      })
+    getRandomFact().then(newFact => setCatFact(newFact))
   }, [])
+
+  // Para recuperar la imagen al cambiar la cita
+  useEffect(() => {
+    if (!catFact) return
+    const firstThreeWords = catFact.split(' ', 3).join(' ')
+    getRandomCatImage(firstThreeWords).then(image => setImageUrl(image))
+  }, [catFact])
+
+  const handleClick = async () => {
+    const newFact = await getRandomFact()
+    setCatFact(newFact)
+  }
 
   return (
     <main>
       <h1>App de gatitos</h1>
+      <button onClick={handleClick}>Get new fact</button>
       {catFact && <p>{catFact}</p>}
       {imageUrl && (
         <img
