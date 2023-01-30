@@ -3,8 +3,8 @@
 APIs:
 
 - Facts random: https://catfact.ninja/fact
-- Image random: https://cataas.com/cat/says/hello
+- Image random: https://cataas.com/cat/says/hello?json=true
 
 - Recupera un hecho aleatorio de gatos de la primera API
-- Guarda en un estado la primera palabra del hecho recuperadomuestra
-- Obtén una imagen de un gato con la primera palabra del hecho recuperado, usando la segunda API.
+- Guarda en un estado de las 3 primeras palabras del hecho recuperado
+- Muestra una imagen aleatoria de un gato con las 3 primeras palabras del hecho recuperado, usando la segunda API.
