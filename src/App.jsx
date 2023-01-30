@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react'
-import { fetchCatFacts } from './helpers/fetchCatFacts'
 
 export const App = () => {
-  useEffect(async () => {
-    setFact(await fetchCatFacts())
+  const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact'
+  const [fact, setFact] = useState()
+
+  useEffect(() => {
+    async function getRandomFacts () {
+      const res = await fetch(CAT_ENDPOINT_RANDOM_FACT)
+      const json = await res.json()
+      setFact(json.fact)
+    }
+    getRandomFacts()
   }, [])
 
-  const [fact, setFact] = useState(null)
   return (
     <main>
       <h1>App de gatitos</h1>
-      <p>{fact}</p>
+      {fact && <p>{fact}</p>}
     </main>
   )
 }
