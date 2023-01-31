@@ -1,28 +1,13 @@
-import { useEffect, useState } from 'react'
 import './App.css'
-import { getRandomFact } from './services/catFacts.js'
-import { getRandomCatImage } from './services/catImage.js'
+import { useCatFact } from './hooks/useCatFact.js'
+import { useCatImage } from './hooks/useCatImage.js'
 
 export const App = () => {
-  const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
-  const [catFact, setCatFact] = useState()
-  const [imageUrl, setImageUrl] = useState()
+  const { catFact, refreshFact } = useCatFact()
+  const { imageUrl } = useCatImage({ catFact })
 
-  // Para recuperar la cita al cargar la página
-  useEffect(() => {
-    getRandomFact().then(newFact => setCatFact(newFact))
-  }, [])
-
-  // Para recuperar la imagen al cambiar la cita
-  useEffect(() => {
-    if (!catFact) return
-    const firstThreeWords = catFact.split(' ', 3).join(' ')
-    getRandomCatImage(firstThreeWords).then(image => setImageUrl(image))
-  }, [catFact])
-
-  const handleClick = async () => {
-    const newFact = await getRandomFact()
-    setCatFact(newFact)
+  const handleClick = () => {
+    refreshFact()
   }
 
   return (
@@ -32,7 +17,7 @@ export const App = () => {
       {catFact && <p>{catFact}</p>}
       {imageUrl && (
         <img
-          src={`${CAT_PREFIX_IMAGE_URL}${imageUrl}`}
+          src={imageUrl}
           alt={`Image extracted using the first 3 words from ${catFact}`}
         />
       )}
